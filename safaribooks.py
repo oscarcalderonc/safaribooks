@@ -360,10 +360,19 @@ class SafariBooks:
                                 + " ({0})".format(self.book_id)
 
         books_dir = os.path.join(PATH, "Books")
+
+        if args.root_path:
+            books_dir = args.root_path
+
         if not os.path.isdir(books_dir):
             os.mkdir(books_dir)
 
-        self.BOOK_PATH = os.path.join(books_dir, self.clean_book_title)
+        individual_book_dir = self.clean_book_title
+        
+        if args.book_path:
+            individual_book_dir = args.book_path
+
+        self.BOOK_PATH = os.path.join(books_dir, individual_book_dir)
         self.display.set_output_dir(self.BOOK_PATH)
         self.css_path = ""
         self.images_path = ""
@@ -1081,6 +1090,15 @@ if __name__ == "__main__":
         "--kindle", dest="kindle", action='store_true',
         help="Add some CSS rules that block overflow on `table` and `pre` elements."
              " Use this option if you're going to export the EPUB to E-Readers like Amazon Kindle."
+    )
+    arguments.add_argument(
+        "--book-path", dest="book_path", type=str,
+        help="Set the destination path for the downloaded ebook."
+    )
+
+    arguments.add_argument(
+        "--root-path", dest="root_path", type=str, 
+        help="Set the root path for all the downloaded ebooks."
     )
     arguments.add_argument(
         "--preserve-log", dest="log", action='store_true', help="Leave the `info_XXXXXXXXXXXXX.log`"
